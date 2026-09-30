@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snake - Classic Browser Game</title>
+  <meta name="description" content="A classic Snake game built with vanilla HTML, CSS and JavaScript.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main class="app">
+    <h1 class="title">SNAKE</h1>
+
+    <section class="hud" aria-label="Scoreboard">
+      <div class="hud__item">
+        <span class="hud__label">Score</span>
+        <span id="score" class="hud__value">0</span>
+      </div>
+      <div class="hud__item">
+        <span class="hud__label">Level</span>
+        <span id="level" class="hud__value">1</span>
+      </div>
+      <div class="hud__item">
+        <span class="hud__label">Best</span>
+        <span id="high-score" class="hud__value">0</span>
+      </div>
+    </section>
+
+    <canvas id="game-canvas" class="board" role="img" aria-label="Snake game board"></canvas>
+
+    <div class="dpad" aria-label="On-screen controls">
+      <button class="dpad__btn dpad__up" data-dir="UP" aria-label="Up">&#9650;</button>
+      <button class="dpad__btn dpad__left" data-dir="LEFT" aria-label="Left">&#9664;</button>
+      <button class="dpad__btn dpad__action" data-action="toggle" aria-label="Start or pause">&#9199;</button>
+      <button class="dpad__btn dpad__right" data-dir="RIGHT" aria-label="Right">&#9654;</button>
+      <button class="dpad__btn dpad__down" data-dir="DOWN" aria-label="Down">&#9660;</button>
+    </div>
+
+    <p class="help">
+      <kbd>&#8592;</kbd><kbd>&#8593;</kbd><kbd>&#8594;</kbd><kbd>&#8595;</kbd> or <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> to move
+      &middot; <kbd>Space</kbd> start / pause &middot; <kbd>R</kbd> restart
+    </p>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/snake.js"></script>
+  <script src="js/food.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
