@@ -4,13 +4,15 @@
   document.addEventListener('DOMContentLoaded', () => {
     const { Game, Input } = window.SnakeGame;
     const canvas = document.getElementById('game-canvas');
+    const difficultyButtons = Array.from(document.querySelectorAll('[data-difficulty]'));
 
     const game = new Game({
       canvas,
       elements: {
         score: document.getElementById('score'),
         level: document.getElementById('level'),
-        highScore: document.getElementById('high-score')
+        highScore: document.getElementById('high-score'),
+        difficultyButtons
       }
     });
 
@@ -21,6 +23,14 @@
       },
       canvas
     );
+
+    // Difficulty selector
+    difficultyButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        game.setDifficulty(btn.dataset.difficulty);
+        btn.blur(); // so Space doesn't re-trigger the button
+      });
+    });
 
     // Auto-pause when the player switches tabs
     document.addEventListener('visibilitychange', () => {

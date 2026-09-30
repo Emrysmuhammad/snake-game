@@ -1,17 +1,21 @@
 (function (root) {
   'use strict';
 
-  const { Config, Snake, DIRECTIONS, spawnFood, Renderer } = root.SnakeGame;
+  const {
+    Config, Snake, DIRECTIONS, spawnFood, Renderer,
+    DIFFICULTIES, DEFAULT_DIFFICULTY, isValidDifficulty, getSpeed
+  } = root.SnakeGame;
 
   /**
    * Game state machine:  ready -> running <-> paused -> over -> (ready)
-   * Owns the score, level, speed, game loop and high score.
+   * Owns the score, level, speed, game loop, difficulty and high score.
    */
   class Game {
     constructor({ canvas, elements }) {
       this.renderer = new Renderer(canvas, Config);
       this.els = elements;
       this.timer = null;
+      this.difficulty = this.loadDifficulty();
       this.highScore = this.loadHighScore();
       this.reset();
     }
@@ -71,11 +75,21 @@
       this.draw();
     }
 
+    // ---------- difficulty ----------
+
+    /** Switch difficulty. This resets the round so scores stay fair. */
+    setDifficulty(name) {
+      if (!isValidDifficulty(name) || name === this.difficulty) return;
+      this.difficulty = name;
+      this.saveDifficulty();
+      this.highScore = this.loadHighScore();
+      this.reset();
+    }
+
     // ---------- game loop ----------
 
     speed() {
-      const ms = Config.START_SPEED_MS - (this.level - 1) * Config.SPEED_STEP_MS;
-      return Math.max(Config.MIN_SPEED_MS, ms);
+      return getSpeed(this.difficulty, this.level);
     }
 
     schedule() {
@@ -140,9 +154,10 @@
     // ---------- drawing & HUD ----------
 
     overlay() {
+      const label = DIFFICULTIES[this.difficulty].label;
       switch (this.state) {
         case 'ready':
-          return { title: 'SNAKE', subtitle: 'Press Space or tap to start' };
+          return { title: 'SNAKE', subtitle: label + '  -  Press Space or tap to start' };
         case 'paused':
           return { title: 'PAUSED', subtitle: 'Press Space to resume' };
         case 'over':
@@ -167,13 +182,23 @@
       this.els.score.textContent = this.score;
       this.els.level.textContent = this.level;
       this.els.highScore.textContent = this.highScore;
+
+      (this.els.difficultyButtons || []).forEach((btn) => {
+        const active = btn.dataset.difficulty === this.difficulty;
+        btn.classList.toggle('is-active', active);
+        btn.setAttribute('aria-checked', String(active));
+      });
     }
 
     // ---------- persistence ----------
 
+    highScoreKey() {
+      return Config.HIGH_SCORE_KEY + '.' + this.difficulty;
+    }
+
     loadHighScore() {
       try {
-        return parseInt(localStorage.getItem(Config.HIGH_SCORE_KEY), 10) || 0;
+        return parseInt(localStorage.getItem(this.highScoreKey()), 10) || 0;
       } catch (err) {
         return 0; // storage blocked (private mode, etc.)
       }
@@ -181,7 +206,24 @@
 
     saveHighScore() {
       try {
-        localStorage.setItem(Config.HIGH_SCORE_KEY, String(this.highScore));
+        localStorage.setItem(this.highScoreKey(), String(this.highScore));
+      } catch (err) {
+        /* ignore */
+      }
+    }
+
+    loadDifficulty() {
+      try {
+        const saved = localStorage.getItem(Config.DIFFICULTY_KEY);
+        return isValidDifficulty(saved) ? saved : DEFAULT_DIFFICULTY;
+      } catch (err) {
+        return DEFAULT_DIFFICULTY;
+      }
+    }
+
+    saveDifficulty() {
+      try {
+        localStorage.setItem(Config.DIFFICULTY_KEY, this.difficulty);
       } catch (err) {
         /* ignore */
       }
