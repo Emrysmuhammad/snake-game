@@ -26,6 +26,12 @@
       </div>
     </section>
 
+    <div class="difficulty" role="radiogroup" aria-label="Difficulty">
+      <button class="difficulty__btn" role="radio" aria-checked="false" data-difficulty="beginner">Beginner</button>
+      <button class="difficulty__btn" role="radio" aria-checked="false" data-difficulty="intermediate">Intermediate</button>
+      <button class="difficulty__btn" role="radio" aria-checked="false" data-difficulty="expert">Expert</button>
+    </div>
+
     <canvas id="game-canvas" class="board" role="img" aria-label="Snake game board"></canvas>
 
     <div class="dpad" aria-label="On-screen controls">
@@ -42,7 +48,9 @@
     </p>
   </main>
 
+   
   <script src="js/config.js"></script>
+  <script src="js/difficulty.js"></script>
   <script src="js/snake.js"></script>
   <script src="js/food.js"></script>
   <script src="js/renderer.js"></script>
