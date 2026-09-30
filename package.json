@@ -1,0 +1,11 @@
+{
+  "name": "snake-game",
+  "version": "1.0.0",
+  "description": "A classic Snake game built with vanilla HTML, CSS and JavaScript.",
+  "main": "index.html",
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": ["snake", "game", "javascript", "canvas", "html5"],
+  "license": "MIT"
+}
